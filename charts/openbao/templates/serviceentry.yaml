@@ -1,0 +1,37 @@
+{{- if and (.Values.global.istio.enabled)  }}
+{{- if and (.Values.global.istio.seal.kms.enabled)  }}
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: ServiceEntry
+metadata:
+  name: {{ template "openbao.fullname" . }}-kms
+spec:
+  exportTo:
+    - .
+  hosts:
+    - "kms.{{ .Values.global.istio.seal.kms.region }}.amazonaws.com"
+  location: MESH_INTERNAL
+  ports:
+    - name: https
+      number: 443
+      protocol: HTTPS
+  resolution: DNS
+{{- end }}
+{{- range $serviceEntry := .Values.global.istio.ServiceEntries }}
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: ServiceEntry
+metadata:
+  name: {{ include "openbao.fullname" $ }}-{{ $serviceEntry.name }}
+spec:
+  exportTo:
+    - .
+  hosts: 
+    {{- toYaml $serviceEntry.hosts | nindent 4 }}
+  ports: 
+    {{- toYaml $serviceEntry.ports | nindent 4 }}
+  location: {{ $serviceEntry.location }}
+  resolution: {{ $serviceEntry.resolution }}
+
+{{- end }}
+{{- end }}

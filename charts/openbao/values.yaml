@@ -50,10 +50,10 @@ global:
     namespaceLabelsInject: 
       istio-injection: enabled
     workloadAnnotationsInject:
-      proxy.istio.io/config: '{ "holdApplicationUntilProxyStarts": true }'
-      sidecar.istio.io/inject: 'true'
-      sidecar.istio.io/proxyCPU: '0.008'
-      sidecar.istio.io/proxyCPULimit: '2'
+      proxy.istio.io/config: "'{ \"holdApplicationUntilProxyStarts\": true }'"
+      sidecar.istio.io/inject: "'true'"
+      sidecar.istio.io/proxyCPU: "'0.008'"
+      sidecar.istio.io/proxyCPULimit: "'2'"
       sidecar.istio.io/proxyMemory: 64Mi
       sidecar.istio.io/proxyMemoryLimit: 512Mi
     seal:
@@ -61,7 +61,7 @@ global:
         enabled: false
         region: "eu-west-1"
         sts: true
-    ServiceEntries: {}
+    ServiceEntries: []
       # - name: openbao-postgres
       #   hosts:
       #   - aurora-cluster.cluster-aaaaaaaaaaaa.eu-west-1.rds.amazonaws.com
