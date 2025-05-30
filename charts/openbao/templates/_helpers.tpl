@@ -474,8 +474,8 @@ Sets extra pod annotations
         {{- end }}
   {{- end }}
   # If istio is enabled
-  {{- if and (.Values.global.istio.enabled) (.Value.global.istio.workloadAnnotationsInject)  }}
-  {{- range $key, $value := .Value.global.istio.workloadAnnotationsInject }}
+  {{- if and (.Values.global.istio.enabled)  }}
+  {{- range $key, $value := .Values.global.istio.workloadAnnotationsInject }}
         {{ $key }}: {{ $value }}
   {{- end }}
   {{- end }}
