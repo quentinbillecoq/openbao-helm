@@ -1,0 +1,42 @@
+{{- if and (.Values.global.istio.enabled)  }}
+{{- if and (.Values.server.istioGateway.enabled)  }}
+{{- $serviceName := include "openbao.fullname" . -}}
+{{- if and (eq .mode "ha" ) (eq (.Values.server.route.activeService | toString) "true") }}
+{{- $serviceName = printf "%s-%s" $serviceName "active" -}}
+{{- end }}
+---
+apiVersion: networking.istio.io/v1beta1
+kind: Gateway
+metadata:
+  name: {{ template "openbao.fullname" . }}
+  namespace: {{ include "openbao.namespace" . }}
+spec:
+  selector:
+    istio: ingressgateway
+  servers:
+    - hosts:
+        - {{ .Values.server.istioGateway.host }}
+      port:
+        {{- toYaml .Values.server.istioGateway.port | nindent 8 }}
+      tls:
+        {{- toYaml .Values.server.istioGateway.tls | nindent 8 }}
+
+---
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: {{ template "openbao.fullname" . }}
+  namespace: {{ include "openbao.namespace" . }}
+spec:
+  gateways:
+    - {{ template "openbao.fullname" . }}
+  hosts:
+    - {{ .Values.server.istioGateway.host }}
+  http:
+    - route:
+        - destination:
+            host: {{ $serviceName }}
+            port:
+              number: 8200
+{{- end }}
+{{- end }}
