@@ -1,10 +1,33 @@
 {{- if and (.Values.global.istio.enabled)  }}
+---
+apiVersion: networking.istio.io/v1beta1
+kind: ServiceEntry
+metadata:
+  name: {{ template "openbao.fullname" . }}-kubernetes
+  namespace: {{ include "openbao.namespace" . }}
+spec:
+  exportTo:
+    - .
+  addresses:
+    - {{ .Values.global.istio.kubernetesIP }}/32
+  hosts:
+    - kubernetes.default
+    - kubernetes.default.svc
+    - kubernetes.default.svc.cluster.local
+  location: MESH_INTERNAL
+  ports:
+    - name: https
+      number: 443
+      protocol: HTTPS
+  resolution: NONE
+
 {{- if and (.Values.global.istio.seal.kms.enabled)  }}
 ---
 apiVersion: networking.istio.io/v1alpha3
 kind: ServiceEntry
 metadata:
   name: {{ template "openbao.fullname" . }}-kms
+  namespace: {{ include "openbao.namespace" . }}
 spec:
   exportTo:
     - .
@@ -26,6 +49,7 @@ apiVersion: networking.istio.io/v1alpha3
 kind: ServiceEntry
 metadata:
   name: {{ include "openbao.fullname" $ }}-{{ $serviceEntry.name }}
+  namespace: {{ include "openbao.namespace" $ }}
 spec:
   exportTo:
     - .

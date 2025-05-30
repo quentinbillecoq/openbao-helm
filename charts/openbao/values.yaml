@@ -47,6 +47,7 @@ global:
 
   istio:
     enabled: false
+    kubernetesIP: 172.30.0.1
     namespaceLabelsInject: 
       istio-injection: enabled
     workloadAnnotationsInject:
