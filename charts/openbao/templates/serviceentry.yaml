@@ -10,6 +10,9 @@ spec:
     - .
   hosts:
     - "kms.{{ .Values.global.istio.seal.kms.region }}.amazonaws.com"
+    {{- if .Values.global.istio.seal.kms.sts }}
+    - "sts.amazonaws.com"
+    {{- end }}
   location: MESH_INTERNAL
   ports:
     - name: https
