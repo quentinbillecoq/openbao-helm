@@ -1,0 +1,12 @@
+kind: Namespace
+apiVersion: v1
+metadata:
+  name: {{ include "openbao.namespace" . }}
+  labels:
+    app.kubernetes.io/name: {{ include "openbao.name" . }}
+    # If istio is enabled, set the namespace label for istio injection
+    {{- if and (.Values.global.istio.enabled) (.Value.global.istio.namespaceLabelsInject)  }}
+    {{- range $key, $value := .Value.global.istio.namespaceLabelsInject }}
+    {{ $key }}: {{ $value }}
+    {{- end }}
+    {{- end }}

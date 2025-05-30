@@ -473,6 +473,12 @@ Sets extra pod annotations
           {{- toYaml .Values.server.annotations | nindent 8 }}
         {{- end }}
   {{- end }}
+  # If istio is enabled
+  {{- if and (.Values.global.istio.enabled) (.Value.global.istio.workloadAnnotationsInject)  }}
+  {{- range $key, $value := .Value.global.istio.workloadAnnotationsInject }}
+        {{ $key }}: {{ $value }}
+  {{- end }}
+  {{- end }}
 {{- end -}}
 
 {{/*
